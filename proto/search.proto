@@ -1,0 +1,76 @@
+syntax = "proto3";
+
+package ahri_grpc;
+
+option go_package = "ahri_grpc/proto";
+
+message Search {
+
+    message Location {
+        double latitude = 1;
+        double longitude = 2;
+        uint32 elevation = 3;
+    }
+
+    message Outdoordesignconditions {
+        string weatherStation = 1;
+        string state = 2;
+        uint32 elevation = 3;
+        double latitude = 4;
+        uint32 heating99DB = 5;
+        uint32 cooling01DB = 6;
+        uint32 coincidentWB = 7;
+        uint32 DG45RH = 8;
+        uint32 DG50RH = 9;
+        uint32 DG55RH = 10;
+        string dailyRange = 11;
+    }
+
+    message Indoordesignconditions {
+        uint32 winterIndoorF = 1;
+        uint32 summerIndoorF = 2;
+        uint32 coolingRH = 3;
+    }
+
+    message Loadcalculation {
+        double sensibleBTUH = 1;
+        double heatingBTUH = 2;
+        double latentBTUH = 3;
+    }
+
+    message Heatedcooled {
+        bool providesCooling = 1;
+        bool providesHeating = 2;
+    }
+
+    message Systemattributes {
+        Heatedcooled heatedCooled = 1;
+        string fuelSource = 2;
+        string energyDistributionMethod = 3;
+    }
+
+    uint32 id = 1;
+    Location location = 2;
+    Outdoordesignconditions outdoorDesignConditions = 3;
+    Indoordesignconditions indoorDesignConditions = 4;
+    Loadcalculation loadCalculation = 5;
+    Systemattributes systemAttributes = 6;
+}
+
+message Result {
+    uint32 CoolingCapacity = 1;
+    double EER = 2;
+    double SEER = 3;
+    double HSPF = 4;
+    double AFUE = 5;
+    string outdoorUnitSKU = 6;
+    string IndoorUnitSKU = 7;
+    string FurnaceSKU = 8;
+    double NominalCoolingTons = 9;
+    uint32 SensibleCapacity = 10;
+    uint32 LatentCapacity = 11;
+}
+ 
+service SearchService {
+    rpc EquipmentSearch(Search) returns(Result) {};
+}
