@@ -1,76 +1,82 @@
-syntax = "proto3";
+syntax = "proto2";
 
 package ahri_grpc;
 
-option go_package = "ahri_grpc/proto";
+option go_package="./proto";
 
 message Search {
 
     message Location {
-        double latitude = 1;
-        double longitude = 2;
-        uint32 elevation = 3;
+        required double latitude = 1;
+        required double longitude = 2;
+        required uint32 elevation = 3;
     }
 
     message Outdoordesignconditions {
-        string weatherStation = 1;
-        string state = 2;
-        uint32 elevation = 3;
-        double latitude = 4;
-        uint32 heating99DB = 5;
-        uint32 cooling01DB = 6;
-        uint32 coincidentWB = 7;
-        uint32 DG45RH = 8;
-        uint32 DG50RH = 9;
-        uint32 DG55RH = 10;
-        string dailyRange = 11;
+        required string weatherStation = 1;
+        required string state = 2;
+        required uint32 elevation = 3;
+        required double latitude = 4;
+        required uint32 heating99DB = 5;
+        required uint32 cooling01DB = 6;
+        required uint32 coincidentWB = 7;
+        required uint32 DG45RH = 8;
+        required uint32 DG50RH = 9;
+        required uint32 DG55RH = 10;
+        required string dailyRange = 11;
     }
 
     message Indoordesignconditions {
-        uint32 winterIndoorF = 1;
-        uint32 summerIndoorF = 2;
-        uint32 coolingRH = 3;
+        required uint32 winterIndoorF = 1;
+        required uint32 summerIndoorF = 2;
+        required uint32 coolingRH = 3;
+    }
+
+    message NominalSize {
+        required double nominalTons = 1;
+        required double heatingBTUH = 2;
     }
 
     message Loadcalculation {
-        double sensibleBTUH = 1;
-        double heatingBTUH = 2;
-        double latentBTUH = 3;
+        required double sensibleBTUH = 1;
+        required double heatingBTUH = 2;
+        required double latentBTUH = 3;
     }
 
     message Heatedcooled {
-        bool providesCooling = 1;
-        bool providesHeating = 2;
+        required bool providesCooling = 1;
+        required bool providesHeating = 2;
     }
 
     message Systemattributes {
-        Heatedcooled heatedCooled = 1;
-        string fuelSource = 2;
-        string energyDistributionMethod = 3;
+        optional Heatedcooled heatedCooled = 1;
+        required string fuelSource = 2;
+        required string energyDistributionMethod = 3;
     }
 
-    uint32 id = 1;
-    Location location = 2;
-    Outdoordesignconditions outdoorDesignConditions = 3;
-    Indoordesignconditions indoorDesignConditions = 4;
-    Loadcalculation loadCalculation = 5;
-    Systemattributes systemAttributes = 6;
+    required uint32 Id = 1 [json_name="id"];
+    required Location location = 2 [json_name="location"];
+    required Outdoordesignconditions outdoorDesignConditions = 3 [json_name="outdoorDesignConditions"];
+    required Indoordesignconditions indoorDesignConditions = 4 [json_name="indoorDesignConditions"];
+    optional NominalSize nominalSize = 5 [json_name="nominalSize"];
+    optional Loadcalculation loadCalculation = 6 [json_name="loadCalculation"];
+    required Systemattributes systemAttributes = 7 [json_name="systemAttributes"];
 }
 
 message Result {
-    uint32 CoolingCapacity = 1;
-    double EER = 2;
-    double SEER = 3;
-    double HSPF = 4;
-    double AFUE = 5;
-    string outdoorUnitSKU = 6;
-    string IndoorUnitSKU = 7;
-    string FurnaceSKU = 8;
-    double NominalCoolingTons = 9;
-    uint32 SensibleCapacity = 10;
-    uint32 LatentCapacity = 11;
+    required int32 CoolingCapacity = 1 [json_name="coolingCapacity"];
+    required double EER = 2 [json_name="eer"];
+    required double SEER = 3 [json_name="seer"];
+    optional double HSPF = 4 [json_name="hspf"];
+    required double AFUE = 5 [json_name="afue"];
+    required string OutdoorUnitSKU = 6 [json_name="outdoorUnitSKU"];
+    required string IndoorUnitSKU = 7 [json_name="indoorUnitSKU"];
+    required string FurnaceSKU = 8 [json_name="furnaceSKU"];
+    optional double NominalCoolingTons = 9 [json_name="nominalCoolingTons"];
+    optional int32 SensibleCapacity = 10 [json_name="sensibleCapacity"];
+    optional int32 LatentCapacity = 11 [json_name="latentCapacity"];
 }
- 
+
 service SearchService {
-    rpc EquipmentSearch(Search) returns(Result) {};
+    rpc EquipmentSearch(Search) returns(stream Result) {};
 }

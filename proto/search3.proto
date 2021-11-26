@@ -1,0 +1,82 @@
+syntax = "proto2";
+
+package ahri_grpc;
+
+option go_package="./proto";
+
+message Search {
+
+    message Location {
+        double latitude = 1;
+        double longitude = 2;
+        uint32 elevation = 3;
+    }
+
+    message Outdoordesignconditions {
+        string weatherStation = 1;
+        string state = 2;
+        uint32 elevation = 3;
+        double latitude = 4;
+        uint32 heating99DB = 5;
+        uint32 cooling01DB = 6;
+        uint32 coincidentWB = 7;
+        uint32 DG45RH = 8;
+        uint32 DG50RH = 9;
+        uint32 DG55RH = 10;
+        string dailyRange = 11;
+    }
+
+    message Indoordesignconditions {
+        uint32 winterIndoorF = 1;
+        uint32 summerIndoorF = 2;
+        uint32 coolingRH = 3;
+    }
+
+    message NominalSize {
+        double nominalTons = 1;
+        double heatingBTUH = 2;
+    }
+
+    message Loadcalculation {
+        double sensibleBTUH = 1;
+        double heatingBTUH = 2;
+        double latentBTUH = 3;
+    }
+
+    message Heatedcooled {
+        bool providesCooling = 1;
+        bool providesHeating = 2;
+    }
+
+    message Systemattributes {
+        Heatedcooled heatedCooled = 1;
+        string fuelSource = 2;
+        string energyDistributionMethod = 3;
+    }
+
+    uint32 Id = 1 [json_name="id"];
+    Location location = 2 [json_name="location"];
+    Outdoordesignconditions outdoorDesignConditions = 3 [json_name="outdoorDesignConditions"];
+    Indoordesignconditions indoorDesignConditions = 4 [json_name="indoorDesignConditions"];
+    NominalSize nominalSize = 5 [json_name="nominalSize"];
+    Loadcalculation loadCalculation = 6 [json_name="loadCalculation"];
+    Systemattributes systemAttributes = 7 [json_name="systemAttributes"];
+}
+
+message Result {
+    uint32 CoolingCapacity = 1 [json_name="coolingCapacity"];
+    double EER = 2 [json_name="eer"];
+    double SEER = 3 [json_name="seer"];
+    double HSPF = 4 [json_name="hspf"];
+    double AFUE = 5 [json_name="afue"];
+    string OutdoorUnitSKU = 6 [json_name="outdoorUnitSKU"];
+    string IndoorUnitSKU = 7 [json_name="indoorUnitSKU"];
+    string FurnaceSKU = 8 [json_name="furnaceSKU"];
+    double NominalCoolingTons = 9 [json_name="nominalCoolingTons"];
+    uint32 SensibleCapacity = 10 [json_name="sensibleCapacity"];
+    uint32 LatentCapacity = 11 [json_name="latentCapacity"];
+}
+
+service SearchService {
+    rpc EquipmentSearch(Search) returns(stream Result) {};
+}
